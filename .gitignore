@@ -1,0 +1,8 @@
+OANC_GrAF
+
+__pycache__
+.pytest_cache
+enron*
+max_context_syn_n.txt
+no_context_syn_n.txt
+context_n.csv
