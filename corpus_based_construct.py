@@ -4,15 +4,15 @@ import csv
 import time
 from data_prep import get_syn_dict, preprocess_sent
 
-enron_file = "enron-email-dataset/emails.csv"
-enron_text_file = "enron_data.txt"
-enron_text_preprocessed = "enron_data_preprocessed.txt"
-missing_context_file = "no_context_syn"
-max_context_file = "max_context_syn"
+enron_file = "data/enron-email-dataset/emails.csv"
+enron_text_file = "data/enron_data.txt"
+enron_text_preprocessed = "data/enron_data_preprocessed.txt"
+missing_context_file = "data/no_context_syn"
+max_context_file = "data/max_context_syn"
 
 
 def get_context_file(pos):
-	return "context_{0}.csv".format(pos)
+	return "data/context_{0}.csv".format(pos)
 
 
 def enron_data_to_text():
@@ -107,6 +107,7 @@ def save_context_lists(pos):
 				wr.writerow([syn] + context)
 			else:
 				f1.write(syn + "\n")
+	return
 	
 
 def get_all_synonyms(syn_dict):
@@ -164,6 +165,7 @@ def get_largest_syn(pos):
 		for entry in sorted(lg, key=lambda x: x[0]):
 			if s_list.count(entry[0]) > 1:
 				f.write(entry[0] + " -> " + entry[1] + ": " + ", ".join(entry[2:20]) + '\n')
+	return
 
 
 def trace_back_syn(syn, syn_dict):

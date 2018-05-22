@@ -8,7 +8,8 @@ from word_vectors import select_synonym_with_vectors
 from data_prep import get_syn_dict
 
 
-test_file = "test_set.csv"
+#test_file = "data/test_set.csv"
+test_file = "data/test_set_wn.csv"
 
 
 def evaluate_corpus_replace(data, syn_dict, pos, display=False):
@@ -82,12 +83,14 @@ if __name__ == "__main__":
 	syn_dict = get_syn_dict('n')
 	test_sentences = pd.DataFrame([], columns=['source', 'sentence', 'target', 'pos'])
 	for index, row in data.iterrows():
+	# attention: target can be source !
+	# ######
 		if row['source'] in syn_dict and row['target'] in syn_dict[row['source']] and row['pos'] == 'n':
 			test_sentences.loc[index] = row
 	
 	total = len(test_sentences.index)
 
-	#suggestions, correct = evaluate_corpus_replace(test_sentences, syn_dict, 'n', display=True)
+	#suggestions, correct = evaluate_corpus_replace(test_sentences, syn_dict, 'n', display=False)
 	#suggestions, correct = evaluate_wordnet_replace(test_sentences, syn_dict, 'n', display=True)
 	suggestions, correct = evaluate_wordvectors_replace(test_sentences, syn_dict, 'n', display=False)
 

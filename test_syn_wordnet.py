@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from knowledge_based import get_potential_synsets, select_synonym_with_wn
+from knowledge_based import get_potential_synsets, select_synonym_with_wn, get_sentences_for_word
 
 
 def test_get_potential_synsets_none():
@@ -44,4 +44,8 @@ def test_select_synonym_with_wn():
 	result = select_synonym_with_wn(source, sentence, syn_dict, 'n')
 	assert result
 	assert source not in result
-	
+
+
+def test_get_sentences_for_word():
+	syn_dict =  {"result": ["solution", "resolution", "consequence"]}
+	assert len(get_sentences_for_word("result", syn_dict, 'n')) == 3
