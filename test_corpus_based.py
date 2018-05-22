@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from corpus_based_construct import *
-from corpus_based import select_relevant_contexts, score_context, select_synonym_with_context
+from corpus_based import SuggestWithCorpus, select_relevant_contexts, score_context
 from data_prep import preprocess_sent
 
 
@@ -116,20 +116,23 @@ def test_score_context():
 
 
 def test_select_synonym_with_context_no_word():
-	assert not select_synonym_with_context("word", "test sentence", dict(), 'n')
+	s = SuggestWithCorpus(dict(), 'n', [])
+	assert not s.select_synonym_with_context("word", "test sentence")
 
 
 def test_select_synonym_with_context_no_context():
 	sentence = "word in a test sentence"
 	syn_dict = {"word": ["term", "quarrel"]}
-	assert not select_synonym_with_context("word", sentence, syn_dict, 'n', [])
+	s = SuggestWithCorpus(syn_dict, 'n', [])
+	assert not s.select_synonym_with_context("word", sentence)
 
 
 def test_select_synonym_with_context_single_context():
 	sentence = "word in a test sentence"
 	syn_dict = {"word": ["term", "quarrel"]}
 	context_list = [["term", "your", "speaking", "good"]]
-	result = select_synonym_with_context("word", sentence, syn_dict, 'n', context_list)
+	s = SuggestWithCorpus(syn_dict, 'n', context_list)
+	result = s.select_synonym_with_context("word", sentence)
 	assert result == ["term", "word"]
 
 
@@ -137,7 +140,8 @@ def test_select_synonym_with_context_null():
 	sentence = "word in a test sentence"
 	syn_dict = {"word": ["term", "quarrel"]}
 	context_list = [["term", "your", "speaking", "good"], ["quarrel", "father", "with", "her"]]
-	result = select_synonym_with_context("word", sentence, syn_dict, 'n', context_list)
+	s = SuggestWithCorpus(syn_dict, 'n', context_list)
+	result = s.select_synonym_with_context("word", sentence)
 	assert not result
 
 
@@ -145,5 +149,6 @@ def test_select_synonym_with_context():
 	sentence = "word in a test sentence"
 	syn_dict = {"word": ["term", "quarrel"]}
 	context_list = [["term", "your", "speaking", "good", "sentence"], ["quarrel", "father", "with", "her"]]
-	result = select_synonym_with_context("word", sentence, syn_dict, 'n', context_list)
+	s = SuggestWithCorpus(syn_dict, 'n', context_list)
+	result = s.select_synonym_with_context("word", sentence)
 	assert result == ["term"]
