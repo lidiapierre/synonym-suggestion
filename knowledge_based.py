@@ -3,10 +3,9 @@
 from nltk.wsd import lesk
 from nltk.corpus import wordnet as wn
 
-from data_prep import get_syn_dict
-		
 
 def get_potential_synsets(source, syn_dict, pos):
+	# TODO map syn dict to POS
 	ss_list = []
 	for ss in wn.synsets(source, pos=pos):
 		for l in ss.lemma_names():
@@ -16,8 +15,8 @@ def get_potential_synsets(source, syn_dict, pos):
 	return ss_list
 
 
-def select_synonym_with_wn(source, sentence, pos):
-	syn_dict = get_syn_dict(pos)
+def select_synonym_with_wn(source, sentence, syn_dict, pos):
+	# TODO map syn dict to pos
 	list_ss = get_potential_synsets(source, syn_dict, pos)
 	if not list_ss:
 		return []
@@ -36,9 +35,3 @@ def get_syn_without_syn_dict(source, sentence):
 	ss = lesk(sentence, source)
 	lemmas = [l for l in ss.lemma_names() if l != source]
 	return lemmas or [source]
-
-
-if __name__ == "__main__":
-	source = "increase"
-	sentence = "an increase of 28.3 per cent"
-	print select_synonym_with_wn(source, sentence, 'n')

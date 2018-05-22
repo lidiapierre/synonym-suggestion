@@ -19,6 +19,7 @@ if __name__ == "__main__":
 	ok_1 = 0
 	ok_2 = 0
 	context_list = load_context_file('n')
+	syn_dict = get_syn_dict('n')
 	for index, row in data.iterrows():
 		sent = row['sentence']
 		source = row['source']
@@ -26,8 +27,8 @@ if __name__ == "__main__":
 		pos = row['pos']
 		if source in syn_dict and target in syn_dict[source] and pos == 'n':
 			total += 1
-			r1 = select_synonym_with_wn(source, sent, 'n')
-			r2 = select_synonym_with_context(source, sent, 'n', context_list)
+			r1 = select_synonym_with_wn(source, sent, syn_dict, 'n')
+			r2 = select_synonym_with_context(source, sent, syn_dict, 'n', context_list)
 			if r1:
 				out_1 += 1
 				if target in r1 and source not in r1:

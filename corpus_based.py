@@ -8,14 +8,14 @@ from corpus_based_construct import get_context_file, extract_context_from_sent
 from data_prep import get_syn_dict, preprocess_sent
 
 
-def select_synonym_with_context(word, sentence, pos, context_list=None):
+def select_synonym_with_context(word, sentence, syn_dict, pos, context_list=None):
 	# preprocess new sentence and get list of tokens
 	s_tok = preprocess_sent(sentence)
 	if word not in s_tok:
 		return []
 	if not context_list:
 		context_list = load_context_file(pos)
-	choices = select_relevant_contexts(word, pos, context_list)
+	choices = select_relevant_contexts(word, syn_dict, context_list)
 	if not choices:
 		# no contexts found for list of word synonym
 		return []
@@ -43,9 +43,8 @@ def load_context_file(pos):
 		return list(rd)
 
 
-def select_relevant_contexts(syn, pos, syn_list):
+def select_relevant_contexts(syn, syn_dict, syn_list):
 	result = []
-	syn_dict = get_syn_dict(pos)
 	if syn not in syn_dict:
 		return
 	
@@ -66,8 +65,4 @@ def score_context(new, ref):
 	return score
 		
 
-if __name__ == "__main__":
-	# time load context lists and scoring
-	source = "increase"
-	sentence = "an increase of 28.3 per cent"
-	print select_synonym_with_context(source, sentence, 'n')
+#if __name__ == "__main__":

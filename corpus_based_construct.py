@@ -11,7 +11,6 @@ missing_context_file = "no_context_syn"
 max_context_file = "max_context_syn"
 
 
-
 def get_context_file(pos):
 	return "context_{0}.csv".format(pos)
 
@@ -40,16 +39,18 @@ def load_enron_data_frame():
 
 
 def clean_enron_message(message):
+	# split sentences on full stops
+	message = message.replace(". ", ".\n")
 	lines = message.split("\n")
 	# clean forward symbols
 	lines = [l.strip('>') for l in lines]
 	lines = [l for l in lines if not "----------------------" in l]
-	# keep lines of more than 1 word
-	lines = [l for l in lines if len(l.split()) > 1]
 	# remove headers
 	lines = [l for l in lines if not l.split()[0].endswith(":")]
 	# assemble cut sentences
 	lines = assemble_cut_sentences(lines)
+	# keep lines of more than 1 word
+	lines = [l for l in lines if len(l.split()) > 1]
 	# remove all capitals
 	lines = [l for l in lines if not l.istitle()]
 	# remove all lines with email addresses
@@ -57,14 +58,12 @@ def clean_enron_message(message):
 	# remove all lines that contain digits
 	lines = [l for l in lines if not any(char.isdigit() for char in l)]
 	text = "\n".join(lines)
-	# split sentences on full stops
-	text = text.replace(".  ", ".\n")
 	return text
 
 
 def assemble_cut_sentences(lines):
 	if not lines:
-		return
+		return []
 	result = []
 	l = lines[0]
 	for i in range(len(lines) - 1):
@@ -99,7 +98,7 @@ def save_context_lists(pos):
 	all_sentences = set(list(all_sentences))
 	# tokenize
 	all_sentences_tok = [s.split() for s in all_sentences]
-	all_syn = get_all_synonyms(pos)
+	all_syn = get_all_synonyms(get_syn_dict(pos))
 	with open(get_context_file(pos), 'w+') as csvfile, open(missing_context_file + "_{0}.txt".format(pos), 'w+') as f1:
 		wr = csv.writer(csvfile)
 		for syn in all_syn:
@@ -110,9 +109,8 @@ def save_context_lists(pos):
 				f1.write(syn + "\n")
 	
 
-def get_all_synonyms(pos):
+def get_all_synonyms(syn_dict):
 	syn_list = []
-	syn_dict = get_syn_dict(pos)
 	for word in syn_dict:
 		syn_list += syn_dict[word]
 	# remove duplicates

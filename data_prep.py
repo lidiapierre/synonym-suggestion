@@ -68,5 +68,3 @@ def add_extra_syn_to_dict(df, pos):
 
 if __name__ == "__main__":
 	preprocess_syn_dict()
-
-	
